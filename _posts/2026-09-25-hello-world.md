@@ -31,6 +31,6 @@ hello("World")
 
 ## 图片示例
 
-![示例图片](https://via.placeholder.com/600x200?text=Tale+Blog)
+![示例图片](/assets/example.svg)
 
 欢迎来到我的博客。
