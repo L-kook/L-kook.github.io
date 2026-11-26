@@ -55,8 +55,8 @@ export const menuLinks: { path: string; title: string }[] = [
 // 替换头像：把你的照片放到 public/assets/ 下（如 prof_pic.jpg），然后修改下面的 avatar 路径即可
 export const profileConfig = {
 	enabled: true,
-	avatar: "/assets/avatar.svg",
-	avatarAlt: "L-kook 的照片",
+	avatar: "/assets/avatar.jpg",
+	avatarAlt: "L-kook 的头像",
 	moreInfo: ["Developer · Blogger", "代码与生活记录", "github.com/L-kook"],
 };
 
