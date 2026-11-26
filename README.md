@@ -1,236 +1,107 @@
-<div align="center">
-  <img alt="Astro Cactus logo" src="https://github.com/user-attachments/assets/92dfbabf-ca65-4bf6-991d-9a71e5319880" width="70" />
-</div>
-<h1 align="center">
-  Astro Cactus
-</h1>
+# L-kook 的博客
 
-Astro Cactus is a simple opinionated starter built with [Astro](https://astro.build). Use it to create an easy-to-use blog or website.
+在线地址：[https://l-kook.github.io/](https://l-kook.github.io/)
 
-## Table Of Contents
+基于 [Astro](https://astro.build/) 与 [Astro Cactus](https://github.com/chrismwilliams/astro-theme-cactus) 搭建的个人极简博客，集成亮/暗色切换、文章目录（TOC）、Pagefind 中文站内搜索、自动生成中文 OG 分享图、RSS 订阅以及 `al-folio` 风格的右侧个人照片与信息栏。
 
-1. [Key Features](#key-features)
-2. [Demo](#demo-)
-3. [Quick start](#quick-start)
-4. [Preview](#preview)
-5. [Commands](#commands)
-6. [Configure](#configure)
-7. [Updating](#updating)
-8. [Adding posts, notes, and tags](#adding-posts-notes-and-tags)
-   - [Post Frontmatter](#post-frontmatter)
-   - [Note Frontmatter](#note-frontmatter)
-   - [Tag Frontmatter](#tag-frontmatter)
-   - [Frontmatter Snippets](#frontmatter-snippets)
-9. [Pagefind search](#pagefind-search)
-10. [Analytics](#analytics)
-11. [Deploy](#deploy)
-12. [Acknowledgment](#acknowledgment)
+## 目录结构
 
-## Key Features
+```text
+.
+├── content/
+│   ├── posts/          # 博客文章（.md / .mdx）
+│   ├── notes/          # 简短随记（.md / .mdx）
+│   └── tags/           # 标签自定义说明（可选）
+├── public/
+│   └── assets/         # 静态图片资源（头像、文章配图等）
+├── src/
+│   ├── site.config.ts  # 站点标题、导航、右侧个人信息栏等核心配置
+│   ├── components/
+│   │   ├── ProfileCard.astro  # 右侧个人照片 + 等宽信息栏组件
+│   │   └── SocialList.astro   # 社交链接图标
+│   └── pages/          # 首页、关于页、文章/随记/标签及 OG 图路由
+└── .github/workflows/
+    └── deploy.yml      # GitHub Pages 自动构建与部署工作流
+```
 
-- Astro v7 Fast 🚀
-- Tailwind v4
-- Accessible, semantic HTML markup
-- Responsive & SEO-friendly
-- Dark & Light mode
-- MD & [MDX](https://docs.astro.build/en/guides/markdown-content/#mdx-only-features) posts & notes
-  - Includes [Admonitions](https://astro-cactus.chriswilliams.dev/posts/markdown-elements/admonitions/)
-- [Satori](https://github.com/vercel/satori) for creating open graph png images
-- [Automatic RSS feeds](https://docs.astro.build/en/guides/rss)
-- [Webmentions](https://webmention.io/)
-- Auto-generated:
-  - [sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
-  - [robots.txt](https://github.com/alextim/astro-lib/blob/main/packages/astro-robots-txt/README.md)
-  - [web app manifest](https://github.com/alextim/astro-lib/blob/main/packages/astro-webmanifest/README.md)
-- [Pagefind](https://pagefind.app/) static search library integration
-- [Astro Icon](https://github.com/natemoo-re/astro-icon) svg icon component
-- [Expressive Code](https://expressive-code.com/) code blocks and syntax highlighter
+## 本地开发命令
 
-## Demo 💻
+需要 Node.js 22+ 与 pnpm 10+：
 
-Check out the [Demo](https://astro-cactus.chriswilliams.dev/), hosted on Netlify
+| 命令 | 说明 |
+| :--- | :--- |
+| `pnpm install` | 安装依赖 |
+| `pnpm dev` | 启动本地开发服务器（热更新预览） |
+| `pnpm build` | 构建生产站点到 `dist/` 并自动生成 Pagefind 搜索索引 |
+| `pnpm preview` | 本地预览 `dist/` 生产构建结果 |
+| `pnpm check` | 运行 `astro check` 类型检查与 `biome` 代码检查 |
 
-## Quick start
+## 日常写作与更新
 
-[Create a new repo](https://github.com/chrismwilliams/astro-theme-cactus/generate) from this template.
+### 1. 发布新文章
+
+在 `content/posts/` 下新建 Markdown 文件（例如 `content/posts/my-first-note.md`）：
+
+```markdown
+---
+title: "文章标题"
+description: "一句话摘要，用于列表与 SEO 描述"
+publishDate: "2026-11-26"
+tags: ["技术", "随笔"]
+# 可选字段：
+# updatedDate: "2026-11-27"
+# pinned: true
+# draft: true
+---
+
+这里是正文内容，支持标准 Markdown、代码块高亮与图片引用（如 `![说明](/assets/example.svg)`）。
+```
+
+### 2. 发布简短随记
+
+在 `content/notes/` 下新建 Markdown 文件（`publishDate` 需为带时区的 ISO 8601 格式）：
+
+```markdown
+---
+title: "随记标题"
+description: "简短摘要（可选）"
+publishDate: "2026-11-26T16:00:00+08:00"
+---
+
+记录一条简短的想法或片段。
+```
+
+### 3. 更换右侧个人照片与信息栏
+
+1. 将你的照片放入 `public/assets/`（例如 `public/assets/prof_pic.jpg`）；
+2. 编辑 `src/site.config.ts` 中的 `profileConfig`：
+
+```ts
+export const profileConfig = {
+	enabled: true, // 设为 false 可隐藏右侧照片栏
+	avatar: "/assets/prof_pic.jpg",
+	avatarAlt: "L-kook 的照片",
+	moreInfo: ["Developer · Blogger", "代码与生活记录", "github.com/L-kook"],
+};
+```
+
+### 4. 修改站点信息与社交链接
+
+- 站点名称、简介、导航菜单：`src/site.config.ts`
+- 首页简介：`src/pages/index.astro`
+- 关于页内容：`src/pages/about.astro`
+- 社交图标链接：`src/components/SocialList.astro`
+
+## 自动部署
+
+推送到 `main` 分支后，GitHub Actions（`.github/workflows/deploy.yml`）会自动安装依赖、构建站点并部署到 GitHub Pages：
 
 ```bash
-# npm 7+
-npm create astro@latest -- --template chrismwilliams/astro-theme-cactus
-
-# pnpm
-pnpm dlx create-astro --template chrismwilliams/astro-theme-cactus
+git add -A
+git commit -m "新增文章 / 更新配置"
+git push origin main
 ```
 
-## Preview
+## 致谢
 
-![Astro Theme Cactus in a light theme mode](https://github.com/chrismwilliams/astro-theme-cactus/assets/12715988/84c89d42-4525-4674-b10c-6d6ebdc06382)
-
-![Astro Theme Cactus in a dark theme mode](https://github.com/chrismwilliams/astro-theme-cactus/assets/12715988/e0e575e2-445f-4c2d-a812-b5b53d2d9031)
-
-## Commands
-
-Replace pnpm with your choice of npm / yarn
-
-| Command          | Action                                                         |
-| :--------------- | :------------------------------------------------------------- |
-| `pnpm install`   | Installs dependencies                                          |
-| `pnpm dev`       | Starts local dev server at `localhost:3000`                    |
-| `pnpm build`     | Build your production site to `./dist/`                        |
-| `pnpm postbuild` | Pagefind script to build the static search of your blog posts  |
-| `pnpm preview`   | Preview your build locally, before deploying                   |
-| `pnpm sync`      | Generate types based on your config in `src/content/config.ts` |
-
-## Configure
-
-- Edit the template's config file `src/site.config.ts`
-  - **Important**: set the url property with your own domain.
-  - Modify the settings for markdown code blocks, generated by [Expressive Code](https://expressive-code.com). Astro Cactus has both a dark (dracula) and light (github-light) theme. You can find more options [@ expressive-code](https://expressive-code.com/guides/themes/#available-themes).
-- Update file `astro.config.ts`
-  - [astro-webmanifest options](https://github.com/alextim/astro-lib/blob/main/packages/astro-webmanifest/README.md)
-- Replace & update files within the `/public` folder:
-  - icon.svg - used as the source to create favicons & manifest icons
-  - social-card.png - used as the default og:image
-- Modify file `src/styles/global.css` with your own light and dark styles, and customise [Tailwind's theme settings](https://tailwindcss.com/docs/theme#customizing-your-theme).
-- Edit social links in `src/components/SocialList.astro` to add/replace your media profile. Icons can be found @ [icones.js.org](https://icones.js.org/), per [Astro Icon's instructions](https://www.astroicon.dev/guides/customization/#find-an-icon-set).
-- Create/edit posts & notes for your blog within `src/content/post/` & `src/content/note/` with .md/mdx file(s). See [below](#adding-posts-notes-and-tags) for more details.
-  - Read [this post](http://astro-cactus.chriswilliams.dev/posts/webmentions/) for adding webmentions to your site.
-  - Add any custom Tag pages for related blog posts in `/src/content/tag/`, ensuring that the file name is the same as the tag.
-- OG Image:
-  - If you would like to change the style of the generated image the Satori library creates, open up `src/pages/og-image/_ogMarkup.ts` to the markup function where you can edit the html/tailwind-classes as necessary. You can use this [playground](https://og-playground.vercel.app/) to aid your design.
-  - You can also create your own og images and skip satori generating it for you by adding an ogImage property in the frontmatter with a link to the asset, an example can be found in `src/content/post/testing/social-image.md`. More info on frontmatter can be found [below](#post-frontmatter)
-- Optional:
-  - Fonts: This theme sets the body element to the font family `font-mono`, in `src/layouts/Base.astro` on the `<body>`. You can change fonts by removing the variant `font-mono`, after which TailwindCSS will default to the `font-sans` [font family stack](https://tailwindcss.com/docs/font-family).
-
-## Updating
-
-If you've forked the template, you can [sync the fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork) with your own project, remembering to **not** click Discard Changes as you will lose your own.
-
-If you have a template repository, you can add this template as a remote, [as discussed here](https://stackoverflow.com/questions/56577184/github-pull-changes-from-a-template-repository).
-
-## Adding posts, notes, and tags
-
-This theme uses [Content Collections](https://docs.astro.build/en/guides/content-collections/) to organise local Markdown and MDX files, as well as type-checking frontmatter with a schema -> `src/content.config.ts`.
-
-Adding a post/note/tag is as simple as adding your .md(x) files to either `src/content/post`, `src/content/note`, and `src/content/tag` folders, the filename of which will be used as the slug/url.
-
-The Tag collection allows you to override the content for generated tag pages. For example the template includes `src/content/tag/test.md` which overrides the content shown in `your-domain.com/tags/test`.
-
-> **Note**
-> For a tag page to work, the file name (`src/content/tag/*`) must also be in a post's [tags frontmatter.](#post-frontmatter)
-
-The posts/notes/tags included with this template are there as an example of how to structure your frontmatter. Additionally, the [Astro docs](https://docs.astro.build/en/guides/markdown-content/) has a detailed section on markdown pages.
-
-### Post Frontmatter
-
-| Property (\* required) | Description                                                                                                                                                                                                                                                                                                  |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| title \*               | Self explanatory. Used as the text link to the post, the h1 on the posts' page, and the pages title property. Has a max length of 60 chars, set in `src/content/config.ts`                                                                                                                                   |
-| description \*         | Similar to above, used as the seo description property. Has a min length of 50 and a max length of 160 chars, set in the post schema.                                                                                                                                                                        |
-| publishDate \*         | Again pretty simple. To change the date format/locale, currently **en-GB**, update the date option in `src/site.config.ts`. Note you can also pass additional options to the component `<FormattedDate>` if required.                                                                                        |
-| updatedDate            | This is an optional date representing when a post has been updated, in the same format as the publishDate.                                                                                                                                                                                                   |
-| tags                   | Tags are optional with any created post. Any new tag(s) will be shown in `your-domain.com/posts` & `your-domain.com/tags`, and generate the page(s) `your-domain.com/tags/[yourTag]`                                                                                                                         |
-| coverImage             | This is an optional object that will add a cover image to the top of a post. Include both a `src`: "_path-to-image_" and `alt`: "_image alt_". You can view an example in `src/content/post/testing/cover-image/index.md`.                                                                                                 |
-| ogImage                | This is an optional property. An OG Image will be generated automatically for every post where this property **isn't** provided. If you would like to create your own for a specific post, include this property and a link to your image, the theme will then skip automatically generating one.            |
-| draft                  | This is an optional property as it is set to false by default in the schema. By adding true, the post will be filtered out of the production build in a number of places, inc. getAllPosts() calls, og-images, rss feeds, and generated page[s]. You can view an example in `src/content/post/testing/draft-post.md` |
-
-### Note Frontmatter
-
-| Property (\* required) | Description                                                                                                           |
-| ---------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| title \*               | Used as the link text to the note, the pages title property, and the h1 of said note page. Has a max length 60 chars. |
-| description            | Optional. Used for the head meta description property.                                                                |
-| publishDate \*         | ISO 8601 format with offsets allowed.                                                                                 |
-
-### Tag Frontmatter
-
-| Property (\* required) | Description                                                                                             |
-| ---------------------- | ------------------------------------------------------------------------------------------------------- |
-| title                  | Optional. Used as the h1 on the tags' page, and the pages title property. Has a max length of 60 chars. |
-| description            | Optional. Used for the head meta description and the first paragraph under the h1.                      |
-
-### Frontmatter snippets
-
-Astro Cactus includes a helpful VSCode snippet which creates a frontmatter 'stub' for posts and note's, found here -> `.vscode/post.code-snippets`. Start typing the word `frontmatter` on your newly created .md(x) file to trigger it. Visual Studio Code snippets appear in IntelliSense via (⌃Space) on mac, (Ctrl+Space) on windows.
-
-## Pagefind search
-
-This integration brings a static search feature for searching blog posts and notes. In its current form, pagefind only works once the site has been built. This theme adds a postbuild script that should be run after Astro has built the site. You can preview locally by running both build && postbuild.
-
-Search results only includes pages from posts and notes. If you would like to include other/all your pages, remove/re-locate the attribute `data-pagefind-body` to the article tag found in `src/layouts/BlogPost.astro` and `src/components/note/Note.astro`.
-
-It also allows you to filter posts by tags added in the frontmatter of blog posts. If you would rather remove this, remove the data attribute `data-pagefind-filter="tag"` from the link in `src/components/blog/Masthead.astro`.
-
-If you would rather not include this integration, simply remove the component `src/components/Search.astro`, and uninstall both `@pagefind/default-ui` & `pagefind` from package.json. You will also need to remove the postbuild script from here as well.
-
-You can reduce the initial css payload of your css, [as demonstrated here](https://github.com/chrismwilliams/astro-theme-cactus/pull/145#issue-1943779868), by lazy loading the web components styles.
-
-## Analytics
-
-You may want to track the number of visitors you receive to your blog/website in order to understand trends and popular posts/pages you've created. There are a number of providers out there one could use, including web hosts such as [vercel](https://vercel.com/analytics), [netlify](https://www.netlify.com/products/analytics/), and [cloudflare](https://www.cloudflare.com/web-analytics/).
-
-This theme/template doesn't include a specific solution due to there being a number of use cases and/or options which some people may or may not use.
-
-You may be asked to included a snippet inside the **HEAD** tag of your website when setting it up, which can be found in `src/layouts/Base.astro`. Alternatively, you can add the snippet in `src/components/BaseHead.astro`.
-
-## Deploy
-
-For guidence, the [Astro docs](https://docs.astro.build/en/guides/deploy/) has a great breakdown of how to deploy your own Astro site on various platforms and their idiosyncrasies.
-
-By default, the theme prerenders all pages and endpoints, with the [`'static'` output](https://docs.astro.build/en/reference/configuration-reference/#output), and the [`'./dist'`](https://docs.astro.build/en/reference/configuration-reference/#outdir) output directory.
-
-You do not need to add any adapter to use this theme.
-
-### Cloudflare Workers
-
-If deploying via Cloudflare Workers, you may have [issues](https://github.com/chrismwilliams/astro-theme-cactus/issues/454) with regards to the OG image endpoints and it requiring a Node environment. To solve this, you will need to add a [Wrangler configuration file](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/#if-you-have-a-static-site) for a static build.
-
-```jsonc
-{
-  "name": "astro-cactus",
-  // Set this to today's date
-  "compatibility_date": "2026-05-11",
-  "assets": {
-    "directory": "./dist",
-    "not_found_handling": "404-page"
-  }
-}
-```
-
-If you are intending to use the [Clouflare adapter](https://docs.astro.build/en/guides/integrations-guide/cloudflare/), please set the [`prerenderEnvironment`](https://docs.astro.build/en/guides/integrations-guide/cloudflare/#prerenderenvironment) to `'node'`, and follow the [Cloudflare docs](https://developers.cloudflare.com/workers/framework-guides/web-apps/astro/#if-your-site-uses-on-demand-rendering).
-
-> Please note the `nodejs_compat` flag, and the main entry point which is incorrect on Cloudflare's docs at the time of writing.
-
-```jsonc
-{
-  "name": "astro-cactus",
-  "main": "@astrojs/cloudflare/entrypoints/server",
-  // Set this to today's date
-  "compatibility_date": "2026-05-11",
-  "compatibility_flags": ["global_fetch_strictly_public", "nodejs_compat"],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist",
-    "not_found_handling": "404-page"
-  },
-  "observability": {
-    "enabled": true
-  }
-}
-```
-
-### Subdirectory deployment
-
-This theme doesn't handle subdirectory/base-path deployments (e.g. GitHub Pages project sites) out of the box and will cause [issues](https://github.com/chrismwilliams/astro-theme-cactus/pull/480).
-
-All internal links are root-absolute and don't take into account `base` path values.
-
-See Astro's docs on [base](https://docs.astro.build/en/reference/configuration-reference/#base) and [internal linking](https://docs.astro.build/en/guides/deploy/github/#how-to-deploy) if you require this.
-
-## Acknowledgment
-
-This theme was inspired by [Hexo Theme Cactus](https://github.com/probberechts/hexo-theme-cactus)
-
-## License
-
-MIT
+主题基于 [chrismwilliams/astro-theme-cactus](https://github.com/chrismwilliams/astro-theme-cactus)，右侧个人简介栏排版参考了 [alshedivat/al-folio](https://github.com/alshedivat/al-folio)。

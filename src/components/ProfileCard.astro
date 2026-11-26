@@ -1,0 +1,32 @@
+---
+import { profileConfig } from "@/site.config";
+
+interface Props {
+	class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+{
+	profileConfig.enabled && (
+		<aside class:list={["w-44 shrink-0 sm:w-48", className]}>
+			<figure>
+				<img
+					alt={profileConfig.avatarAlt}
+					class="aspect-[4/5] w-full rounded-md object-cover shadow-md ring-1 ring-black/10 dark:ring-white/15"
+					decoding="async"
+					loading="eager"
+					src={profileConfig.avatar}
+				/>
+				{profileConfig.moreInfo.length > 0 && (
+					<figcaption class="text-muted mt-3 space-y-1 font-mono text-xs leading-relaxed">
+						{profileConfig.moreInfo.map((line) => (
+							<p>{line}</p>
+						))}
+					</figcaption>
+				)}
+			</figure>
+		</aside>
+	)
+}

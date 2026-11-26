@@ -2,6 +2,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 import PostPreview from "@/components/blog/PostPreview.astro";
 import Note from "@/components/note/Note.astro";
+import ProfileCard from "@/components/ProfileCard.astro";
 import SocialList from "@/components/SocialList.astro";
 import { getAllPosts } from "@/data/post";
 import PageLayout from "@/layouts/Base.astro";
@@ -30,12 +31,18 @@ const latestNotes = allNotes
 ---
 
 <PageLayout meta={{ title: "首页" }}>
-	<section>
-		<h1 class="title mb-12">你好，我是 L-kook</h1>
-		<p class="mb-4">
-			简约个人博客 · 记录代码与生活。这里主要存放编程与技术学习笔记、折腾过程中的踩坑记录，以及一些零碎的思考与随笔。
-		</p>
-		<SocialList />
+	<section class="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between sm:gap-10">
+		<div class="min-w-0 flex-1">
+			<h1 class="title mb-6">你好，我是 L-kook</h1>
+			<p class="mb-4 leading-relaxed">
+				简约个人博客 · 记录代码与生活。这里主要存放编程与技术学习笔记、折腾过程中的踩坑记录，以及一些零碎的思考与随笔。
+			</p>
+			<p class="mb-6 leading-relaxed">
+				希望能在这里保持持续输出，把学到的东西沉淀下来，也欢迎在 GitHub 上一起交流。
+			</p>
+			<SocialList />
+		</div>
+		<ProfileCard />
 	</section>
 	{
 		pinnedPosts.length > 0 && (

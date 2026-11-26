@@ -51,6 +51,15 @@ export const menuLinks: { path: string; title: string }[] = [
 	},
 ];
 
+// 右侧个人照片与等宽信息栏配置（类似 al-folio 风格）
+// 替换头像：把你的照片放到 public/assets/ 下（如 prof_pic.jpg），然后修改下面的 avatar 路径即可
+export const profileConfig = {
+	enabled: true,
+	avatar: "/assets/avatar.svg",
+	avatarAlt: "L-kook 的照片",
+	moreInfo: ["Developer · Blogger", "代码与生活记录", "github.com/L-kook"],
+};
+
 // https://expressive-code.com/reference/configuration/
 export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 	styleOverrides: {
