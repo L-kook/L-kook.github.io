@@ -1,0 +1,29 @@
+---
+import PageLayout from "@/layouts/Base.astro";
+
+const meta = {
+	description: "关于 L-kook 和这个博客",
+	title: "关于我",
+};
+---
+
+<PageLayout meta={meta}>
+	<h1 class="title mb-12">关于我</h1>
+	<div class="prose prose-sm prose-cactus max-w-none">
+		<p>你好，我是 <strong>L-kook</strong>。</p>
+		<p>这个博客用来记录：</p>
+		<ul class="list-inside list-disc" role="list">
+			<li>编程与技术学习笔记</li>
+			<li>折腾过程中的踩坑记录</li>
+			<li>一些零碎的思考与随笔</li>
+		</ul>
+		<p>
+			感谢你的来访，欢迎在 <a
+				class="cactus-link inline-block"
+				href="https://github.com/L-kook"
+				rel="noreferrer"
+				target="_blank">GitHub</a
+			> 上交流。
+		</p>
+	</div>
+</PageLayout>
